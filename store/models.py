@@ -9,7 +9,7 @@ class Product(models.Model):
     slug = models.SlugField(max_length=100, unique=True)
     description = models.TextField(max_length=255, blank=True)
     price = models.IntegerField()
-    image = models.ImageField()
+    image = models.ImageField(upload_to="products/")
     stock = models.IntegerField()
     is_available = models.BooleanField(default=True)
     categories = models.ManyToManyField(Category)
