@@ -14,7 +14,7 @@ class Category(models.Model):
         verbose_name_plural = 'categories'
 
     def get_url(self):
-        return reverse('products_by_category', args=[self.slug])
+        return reverse('store:products_by_category', args=[self.slug])
 
     def __str__(self):
         return self.name
@@ -33,7 +33,7 @@ class Product(models.Model):
     modified_date = models.DateTimeField(auto_now=True)
 
     def get_url(self):
-        return reverse('product_detail', args=[self.slug])
+        return reverse('store:product_detail', args=[self.slug])
 
     def __str__(self):
         return self.name
