@@ -44,6 +44,7 @@ INSTALLED_APPS = [
 
     # my apps
     'store.apps.StoreConfig',
+    'cart.apps.CartConfig'
 ]
 
 MIDDLEWARE = [
@@ -71,7 +72,8 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
 
                 # custom context_processors
-                'store.context_processors.category'
+                'store.context_processors.category',
+                'cart.context_processors.cart'
             ],
         },
     },
