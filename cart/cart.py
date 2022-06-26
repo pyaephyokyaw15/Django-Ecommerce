@@ -59,15 +59,24 @@ class Cart:
         Collect the product_id in the session data to query the database
         and return products
         """
-        product_ids = self.cart.keys()
-        products = Product.objects.filter(id__in=product_ids)
-        print(products)
 
         for product_id, qty in self.cart.items():
             product = Product.objects.get(id=product_id)
             price = product.price * qty
             item = {"product": product, "qty": qty, "price": price}
             yield item
+
+    def get_total_price(self):
+        total_price = 0
+        for product_id, qty in self.cart.items():
+            product = Product.objects.get(id=product_id)
+            total_price += product.price * qty
+        return total_price
+
+    def clear(self):
+        # Remove basket from session
+        del self.session['cart']
+        self.save()
 
     def save(self):
         self.session.modified = True

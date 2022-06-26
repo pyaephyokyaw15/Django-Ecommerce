@@ -8,6 +8,8 @@
 <div class="container">
 
 <!-- ============================ COMPONENT 1 ================================= -->
+
+
 <div class="row">
 	<aside class="col-lg-9">
 <div class="card">
@@ -33,9 +35,9 @@
 			</figcaption>
 		</figure>
 	</td>
-	<td> 
+	<td>
 		<!-- col.// -->
-					<div class="col"> 
+					<div class="col">
 						<div class="input-group input-spinner">
 							<div class="input-group-prepend">
 							<a href="{% url 'cart:remove_cart' product.id %}"><button class="btn btn-light" type="button" id="button-minus"> <i class="fa fa-minus"></i> </button></a>
@@ -47,13 +49,13 @@
 						</div> <!-- input-group.// -->
 					</div> <!-- col.// -->
 	</td>
-	<td> 
-		<div class="price-wrap"> 
+	<td>
+		<div class="price-wrap">
 			<var class="price">${{ item.price }}</var>
 			<small class="text-muted"> ${{ product.price }} each </small>
 		</div> <!-- price-wrap .// -->
 	</td>
-	<td class="text-right"> 
+	<td class="text-right">
 	<a href="{% url 'cart:remove_cart_item' product.id %}" class="btn btn-danger"> Remove</a>
 	</td>
 </tr>
@@ -62,6 +64,7 @@
 
 </tbody>
 </table>
+
 </div> <!-- card.// -->
 
 	</aside> <!-- col.// -->
@@ -71,7 +74,7 @@
 		<div class="card-body">
 			<dl class="dlist-align">
 			  <dt>Total price:</dt>
-			  <dd class="text-right">$69.97</dd>
+			  <dd class="text-right">{{ cart.get_total_price}}</dd>
 			</dl>
 			<dl class="dlist-align">
 			  <dt>Tax:</dt>
@@ -85,7 +88,7 @@
 			<p class="text-center mb-3">
 				<img src="./images/misc/payments.png" height="26">
 			</p>
-			<a href="./place-order.html" class="btn btn-primary btn-block"> Checkout </a>
+			<a href="{% url 'orders:place_order' %}" class="btn btn-primary btn-block"> Checkout </a>
 			<a href="{% url 'store:store' %}" class="btn btn-light btn-block">Continue Shopping</a>
 		</div> <!-- card-body.// -->
 		</div> <!-- card.// -->
