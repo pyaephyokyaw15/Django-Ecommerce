@@ -18,13 +18,15 @@ def place_order(request):
     # return render(request, 'orders/checkout.html')
 
     if request.method == 'POST':
+        cart = Cart(request)
         form = OrderForm(request.POST)
         if form.is_valid():
             # Save order
             order = form.save(commit=False)
             order.customer = request.user
-
+            order.total_price = cart.get_total_price()
             order.save()
+
             order.order_number = datetime.date.today().strftime("%Y%m%d") + str(order.id)
             order.save()
 

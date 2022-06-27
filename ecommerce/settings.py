@@ -45,7 +45,9 @@ INSTALLED_APPS = [
     # my apps
     'store.apps.StoreConfig',
     'cart.apps.CartConfig',
-    'orders.apps.OrdersConfig'
+    'orders.apps.OrdersConfig',
+    'accounts.apps.AccountsConfig'
+
 ]
 
 MIDDLEWARE = [
@@ -124,7 +126,7 @@ USE_I18N = True
 
 USE_TZ = True
 
-
+AUTH_USER_MODEL = 'accounts.CustomUser'
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 
@@ -133,7 +135,8 @@ STATICFILES_DIRS = [
     BASE_DIR / 'static',
 ]
 
-
+LOGIN_REDIRECT_URL = '/store/' # after login successful, url
+LOGIN_URL = '/accounts/login/'  # associated with login-required view. If not login, go to this page.
 
 # Media fiels
 MEDIA_ROOT = BASE_DIR /'media'

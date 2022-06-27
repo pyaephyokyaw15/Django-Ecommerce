@@ -4,6 +4,6 @@ from .models import Order
 class OrderForm(forms.ModelForm):
     class Meta:
         model = Order
-        exclude = ['customer', 'order_number']
+        exclude = ['customer', 'order_number', 'total_price']
 
 
