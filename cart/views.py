@@ -23,3 +23,7 @@ def remove_cart_item(request, product_id):
     cart = Cart(request)
     cart.delete(product_id)
     return redirect('cart:cart_view')
+
+
+def checkout(request):
+    return render(request, 'cart/checkout.html')
