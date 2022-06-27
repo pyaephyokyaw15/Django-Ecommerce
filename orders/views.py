@@ -23,6 +23,9 @@ def place_order(request):
             # Save order
             order = form.save(commit=False)
             order.customer = request.user
+
+            order.save()
+            order.order_number = datetime.date.today().strftime("%Y%m%d") + str(order.id)
             order.save()
 
             cart = Cart(request)
@@ -30,7 +33,8 @@ def place_order(request):
                 OrderItem.objects.create(order=order, product=item['product'], quantity=item['qty'], price=item['price'])
             cart.clear()
             return redirect('store:store')
-
+        else:
+            print(form.errors)
 
     else:
         form = OrderForm()
