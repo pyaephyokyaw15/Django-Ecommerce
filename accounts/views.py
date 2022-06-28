@@ -2,7 +2,8 @@ from django.shortcuts import render, redirect
 from .forms import CustomUserCreationForm
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages, auth
-from orders.models import Order
+from orders.models import Order, OrderItem
+from django.core.mail import send_mail
 # Create your views here.
 def register(request):
     if request.method == 'POST':
@@ -35,19 +36,27 @@ def my_orders(request):
     context = {
         'orders': orders,
     }
+
+    send_mail(
+        'Ecommerce Email - ',  # subject
+        "Hello",  # message
+        'pyaephyokyawtest@gmail.com',  # from email
+        # [conf_settings.CONTACT_US_FORM_EMAIL_TO],  # to email
+        ['pyaekyaw1571999@gmail.com'],
+        fail_silently=False,
+    )
     return render(request, 'accounts/my_orders.html', context)
 
 @login_required
 def order_detail(request, order_id):
-    order_detail = OrderProduct.objects.filter(order__order_number=order_id)
-    order = Order.objects.get(order_number=order_id)
-    subtotal = 0
-    for i in order_detail:
-        subtotal += i.product_price * i.quantity
+    order = Order.objects.get(id=order_id)
+    order_items = OrderItem.objects.filter(order=order)
+
+
 
     context = {
-        'order_detail': order_detail,
+        'order_items': order_items,
         'order': order,
-        'subtotal': subtotal,
+        'subtotal': 0,
     }
     return render(request, 'accounts/order_detail.html', context)
