@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from .forms import CustomUserCreationForm
+from .forms import AccountCreationForm, ProfileForm
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages, auth
 from orders.models import Order, OrderItem
@@ -7,16 +7,30 @@ from django.core.mail import send_mail
 # Create your views here.
 def register(request):
     if request.method == 'POST':
-        form = CustomUserCreationForm(request.POST)
+        form = AccountCreationForm(request.POST)
         if form.is_valid():
            form.save()
 
     else:
-        form = CustomUserCreationForm()
+        form = AccountCreationForm()
     context = {
         'form': form,
     }
     return render(request, 'accounts/register.html', context)
+
+def profile(request):
+    if request.method == 'POST':
+        form = ProfileForm(request.POST, instance=request.user)
+        if form.is_valid():
+           form.save()
+
+    else:
+        form = ProfileForm(instance=request.user)
+    context = {
+        'form': form,
+    }
+    return render(request, 'accounts/profile.html', context)
+
 
 @login_required
 def dashboard(request):
@@ -37,14 +51,7 @@ def my_orders(request):
         'orders': orders,
     }
 
-    send_mail(
-        'Ecommerce Email - ',  # subject
-        "Hello",  # message
-        'pyaephyokyawtest@gmail.com',  # from email
-        # [conf_settings.CONTACT_US_FORM_EMAIL_TO],  # to email
-        ['pyaekyaw1571999@gmail.com'],
-        fail_silently=False,
-    )
+
     return render(request, 'accounts/my_orders.html', context)
 
 @login_required

@@ -6,7 +6,7 @@ from django.contrib.auth.base_user import BaseUserManager
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
-class CustomUserManager(BaseUserManager):
+class AccountManager(BaseUserManager):
     """
     Custom user model manager where email is the unique identifiers
     for authentication instead of usernames.
@@ -38,7 +38,7 @@ class CustomUserManager(BaseUserManager):
 
 
 
-class CustomUser(AbstractUser):
+class Account(AbstractUser):
     is_active = models.BooleanField(
         _("active"),
         default=False,
@@ -55,27 +55,14 @@ class CustomUser(AbstractUser):
     email = models.EmailField(_('email address'), unique=True)
     REQUIRED_FIELDS = ['first_name', 'last_name']
     USERNAME_FIELD = 'email'
+    profile_picture = models.ImageField(upload_to='profiles', default='profiles/default_profile.jpg')
 
-    objects = CustomUserManager()
+    objects = AccountManager()
 
     @property
     def full_name(self):
         return f'{self.first_name} {self.last_name}'
 
 
-class UserProfile(models.Model):
-    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
-    address_line_1 = models.CharField(blank=True, max_length=100)
-    address_line_2 = models.CharField(blank=True, max_length=100)
-    profile_picture = models.ImageField(blank=True, upload_to='profiles/')
-    city = models.CharField(blank=True, max_length=20)
-    state = models.CharField(blank=True, max_length=20)
-    country = models.CharField(blank=True, max_length=20)
-
-    def __str__(self):
-        return self.user.first_name
-
-    def full_address(self):
-        return f'{self.address_line_1} {self.address_line_2}'
 
 
