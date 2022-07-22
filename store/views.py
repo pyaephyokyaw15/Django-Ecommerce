@@ -18,6 +18,7 @@ class ProductListView(ListView):
     def get_queryset(self):
         try:
             category = Category.objects.get(slug=self.kwargs.get('slug'))
+            print(self.kwargs)
             return Product.objects.filter(categories=category, is_available=True)
         except Category.DoesNotExist:
             return Product.objects.filter(is_available=True)
@@ -44,6 +45,26 @@ class ProductDetailView(DetailView):
 
 
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        reviews = ReviewRating.objects.filter(product=context['product'])
+        context['reviews'] = reviews
+
+        if self.request.user.is_authenticated:
+            orderitem= Order.objects.filter(customer=self.request.user, orderitem__product=context['product'])
+            context['orderitem'] = orderitem
+
+            try:
+                review = ReviewRating.objects.get(reviewer=self.request.user, product=context['product'])
+                form = ReviewForm(instance=review)
+            except ReviewRating.DoesNotExist:
+                form = ReviewForm()
+            context['form'] = form
+
+        return context
+
+
+
 
 class ProductSearchView(ListView):
     model = Product
@@ -65,6 +86,25 @@ def submit_review(request, product_id):
     if request.method == 'POST':
         try:
             review = ReviewRating.objects.filter(reviewer=request.user, product__id=product_id).first()
+            form = ReviewForm(request.POST, instance=review)
+            form.save()
+            messages.success(request, 'Thank you! Your review has been updated.')
+            return redirect(url)
+        except ReviewRating.DoesNotExist:
+            form = ReviewForm(request.POST)
+            if form.is_valid():
+                review = form.save(commit=False)
+                review.reviewer = request.user
+                review.product_id = product_id
+
+                review.save()
+                messages.success(request, 'Thank you! Your review has been submitted.')
+                return redirect(url)
+def submit_review(request, product_id):
+    url = request.META.get('HTTP_REFERER')
+    if request.method == 'POST':
+        try:
+            review = ReviewRating.objects.get(reviewer=request.user, product__id=product_id)
             form = ReviewForm(request.POST, instance=review)
             form.save()
             messages.success(request, 'Thank you! Your review has been updated.')
